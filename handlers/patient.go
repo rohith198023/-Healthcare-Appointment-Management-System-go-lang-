@@ -19,13 +19,13 @@ func PatientsignUp(c *fiber.Ctx)error{
 		var User models.Patient
 		if err:=c.BodyParser(&User); err!=nil{
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})	
-		}
+		}	
 
 		if User.Name==""||User.Email==""||User.Password==""{
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "name, email and password are required",
-			})
-		}
+			})	
+		}																						
 
 		var existing models.Patient
 		if err:=database.DB.Where("email=?",User.Email).First(&existing).Error
@@ -35,7 +35,6 @@ func PatientsignUp(c *fiber.Ctx)error{
 			})
 			return err
 		}
-
 		err:=database.DB.Create(&User).Error
 		if err!=nil{
 			c.Status(404).JSON(&fiber.Map{
@@ -61,7 +60,7 @@ func PatientLogin(c *fiber.Ctx)error{
 	if err:=c.BodyParser(&credentials);err!=nil{
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":"Invalid request Body",
-			"details":err.Error(),
+			"details":err.Error(), 
 		})
 	}
 
@@ -71,7 +70,7 @@ func PatientLogin(c *fiber.Ctx)error{
 		})
 	}
 
-	var user models.Patient
+	var user models.Patient 
 
 	credentials.Email=strings.TrimSpace(strings.ToLower(credentials.Email))
 	credentials.Password=strings.TrimSpace(credentials.Password)
@@ -101,6 +100,8 @@ func PatientLogin(c *fiber.Ctx)error{
 	})  
 }
 
+
+
 func VerifyOTPPatient(c *fiber.Ctx) error{
 
 	var payload struct{
@@ -112,7 +113,7 @@ func VerifyOTPPatient(c *fiber.Ctx) error{
 		return c.Status(400).JSON(fiber.Map{
 			"error":"Invalid request",
 		})
-	}
+	} 
 
 	var user models.Patient
 	if err:=database.DB.Where("email=?",payload.Email).First(&user).Error;err!=nil{
@@ -129,7 +130,7 @@ func VerifyOTPPatient(c *fiber.Ctx) error{
 
 	user.OTP=""
 	user.OTPExpiry=time.Time{}
-	database.DB.Save(&user)
+	database.DB.Save(&user) 
 
 	token, err:=utils.GenrateToken(user.ID,user.Role)
 	if err!=nil{
@@ -251,7 +252,7 @@ func GetAllDoctorBYpatient(c *fiber.Ctx)error{
 
 func GetDoctorByIdbypatient(c *fiber.Ctx)error{
 	id:=c.Params("doctorId")
-	doctorbyid:=&models.Doctor{}
+	doctorbyid:=models.Doctor{}
 	if id==""{
 		c.Status(404).JSON(fiber.Map{
 			"Message":"Id can't be empty",
@@ -329,7 +330,7 @@ func CreateAppointment(c *fiber.Ctx)error{
 	}
 
 	lastQueue:=models.Queue{}
-	position:=1
+	position:=1 
 
 	if err := database.DB.
         Joins("JOIN appointments ON appointments.id = queues.appointment_id").
@@ -398,6 +399,8 @@ func GetMyAppointments(c *fiber.Ctx)error{
         "error": "Invalid user_id in token",
     })
 }
+
+
 	appointments:=[]models.Appointment{}
 	if err:=database.DB.Preload("Doctor").Preload("Queue").Where("id=?",id).Find(&appointments).Error
 	err!=nil{

@@ -18,7 +18,11 @@ func GenrateToken(id uint, role string) (string,error){
 	return token.SignedString(SecurityKey)
 }
 
+
+
 func ExtractSecriteKey(token *jwt.Token) (interface{},error){
 	return SecurityKey,nil
 }
+
+
 

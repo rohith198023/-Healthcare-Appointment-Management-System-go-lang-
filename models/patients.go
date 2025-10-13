@@ -15,3 +15,5 @@ type Patient struct{
 	OTP string	`json:"-"`
 	OTPExpiry time.Time	`json:"-"`
 }
+
+

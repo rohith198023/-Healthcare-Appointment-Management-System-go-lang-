@@ -17,7 +17,7 @@ func RecalculateQueue(doctorID uint) error {
 		Order("queues.position ASC").
 		Find(&queues).Error; err != nil {
 		return err
-	}
+	} 
 	for i, q := range queues {
 		newPos := i + 1
 		if q.Position != newPos {

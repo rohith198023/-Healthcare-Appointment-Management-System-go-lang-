@@ -115,6 +115,7 @@ func VerifyOTPDoctor(c *fiber.Ctx) error{
 			"error":"Invalid email",
 		})
 	}
+	
 
 	if user.OTP!=payload.OTP||time.Now().After(user.OTPExpiry){
 		return c.Status(401).JSON(fiber.Map{

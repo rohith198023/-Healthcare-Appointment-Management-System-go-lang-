@@ -12,13 +12,13 @@ func AdminLogin(c *fiber.Ctx)error{
 	var credentials struct{
 		Email string `json:"email"`
 		Password string `json:"Password"`
-	}
+	}	
 
 	if err:=c.BodyParser(&credentials);err!=nil{
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":"Invalid request Body",
 			"details":err.Error(),
-		})
+		}) 
 	}
 
 	if credentials.Email==""||credentials.Password==""{
@@ -34,7 +34,7 @@ func AdminLogin(c *fiber.Ctx)error{
 	if err:=database.DB.Where("Email=? and Password=?",credentials.Email,credentials.Password ).First(&user).Error;err!=nil{
 		return c.Status(404).JSON(fiber.Map{
 			"Message":"Invalid email or password",
-		})
+		}) 
 	}
 
 	token, err := utils.GenrateToken(user.ID, "admin")
@@ -67,6 +67,7 @@ func AdminGetAllPatients(c *fiber.Ctx)error{
 		})
 		return nil
 }
+
 
 func GetPatientById(c *fiber.Ctx)error{
 	id:=c.Params("patientId")
@@ -255,11 +256,13 @@ func UpdateSchedule(c *fiber.Ctx)error{
 		})
 	}
 
+
 	return c.Status(400).JSON(fiber.Map{
 		"Message":"Schedule Updated successfully",
 		"Schedule":updatedSchedule,
 	})
 }
+
 
 func DeleteSchedule(c *fiber.Ctx)error{
 	id:=c.Params("scheduleId")

@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Admin struct {
+type Admin struct {                             
     gorm.Model
     Name     string `json:"name"`
     Email    string `gorm:"unique" json:"email"`
@@ -15,3 +15,5 @@ type Admin struct {
     OTP string `json:"otp"`
     OTPExpiry *time.Time `json:"otp_expiry"`
 }
+
+

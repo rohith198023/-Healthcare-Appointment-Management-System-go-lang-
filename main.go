@@ -4,9 +4,8 @@ import (
 	// "os"
 	"project/database"
 	"project/handlers"
-	"project/middleware"
-
 	"github.com/gofiber/fiber/v2"
+	"project/middleware"
 )
 
 func main(){
@@ -22,10 +21,8 @@ func main(){
 	app.Post("/auth/doctor/signup", handlers.DoctorsignUp)     // doctor register
 	app.Post("/auth/doctor/login", handlers.DoctorLogin)  
 	app.Post("/auth/verify-otp/doctor", handlers.VerifyOTPDoctor)
-
 	//admin login
 	app.Post("/auth/admin/login", handlers.AdminLogin)
-
 
 	//patient api's 
 	PatientApi := app.Group("/api/patient", middleware.VerifyToken)
@@ -65,7 +62,7 @@ func main(){
 	AdminApi.Get("/patients", handlers.AdminGetAllPatients)  
 	AdminApi.Get("/patients/get/:patientId", handlers.GetPatientById)  
 	AdminApi.Delete("/patients/delete/:patientId", handlers.DeletePatentid) 
-
+	
 	// Manage doctors
 	AdminApi.Get("/doctors", handlers.GetAllDoctor) 
 	AdminApi.Get("/doctors/get/:doctorId", handlers.GetDoctorById) 
@@ -81,7 +78,7 @@ func main(){
 	// port:=os.Getenv("port")	
 
 	// AdminApi.Get("/queues", handlers.GetAllQueue)   
-	app.Listen(":8080")
+	app.Listen(":5678")
 	
 }
 
