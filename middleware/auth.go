@@ -19,7 +19,7 @@ func VerifyToken(c *fiber.Ctx) error{
 	if err!=nil || !token.Valid{
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid token"})
 	}
-
+	
 	
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
@@ -49,7 +49,7 @@ func VerifyToken(c *fiber.Ctx) error{
 	roleStr, ok := role.(string) 
 	if !ok || !validRoles[roleStr] {
     	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid role"})
-	}
+	}	
 
 	c.Locals("user_id", userId)
 	c.Locals("role", roleStr) 
@@ -57,4 +57,14 @@ func VerifyToken(c *fiber.Ctx) error{
 }
 
 
+func AdminOnly(c *fiber.Ctx) error {
+	roleVal := c.Locals("role")
+	roleStr, ok := roleVal.(string)
+	if !ok || roleStr != "admin" {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "Admin access required",
+		})
+	}
+	return c.Next()
+}
 

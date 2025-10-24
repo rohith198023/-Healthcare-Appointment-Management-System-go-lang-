@@ -9,41 +9,46 @@ import (
 )
 
 func AdminLogin(c *fiber.Ctx)error{
-	var credentials struct{
-		Email string `json:"email"`
-		Password string `json:"Password"`
-	}	
-
-	if err:=c.BodyParser(&credentials);err!=nil{
+	var admin models.Admin
+	adminEmail := "chavapavankumar1234@gmail.com"
+	if err:=c.BodyParser(&admin);err!=nil{
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":"Invalid request Body",
 			"details":err.Error(),
 		}) 
 	}
 
-	if credentials.Email==""||credentials.Password==""{
+	if admin.Email==""||admin.Password==""||admin.Role==""{
 		return c.Status(404).JSON(fiber.Map{
-			"error":"required email or password",
+			"error":"required email or password or role",
 		})
 	}
 
-	var user models.Admin
-	credentials.Email=strings.TrimSpace(strings.ToLower(credentials.Email))
-	credentials.Password=strings.TrimSpace(credentials.Password)
+	if admin.Email!=adminEmail||admin.Email!="admin"{
+		return c.Status(404).JSON(fiber.Map{
+			"error":"invalid email or role",
+		})
+	}
 
-	if err:=database.DB.Where("Email=? and Password=?",credentials.Email,credentials.Password ).First(&user).Error;err!=nil{
+
+	var user models.Admin
+	user.Email=strings.TrimSpace(strings.ToLower(user.Email))
+	user.Password=strings.TrimSpace(user.Password)
+
+	if err:=database.DB.Where("Email=? and Password=?",user.Email,user.Password ).First(&user).Error;err!=nil{
 		return c.Status(404).JSON(fiber.Map{
 			"Message":"Invalid email or password",
 		}) 
 	}
 
-	token, err := utils.GenrateToken(user.ID, "admin")
+	token, err := utils.GenrateToken(user.ID, user.Role)
     if err != nil {
         return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
             "error": "Failed to generate token",
         })
     }
-
+	
+	database.DB.Save(&user)
     return c.JSON(fiber.Map{
         "message": "Login successful",
         "token":   token,

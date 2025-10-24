@@ -30,6 +30,7 @@ func DBconnect() {
 	DB=db 
     // Auto migrate the schema
     // DB.AutoMigrate(&models.Appointment{},&models.Doctor{},&models.Notification{},&models.Patient{},&models.Queue{},&models.Schedule{})
+
 	err = DB.AutoMigrate(
     &models.Appointment{},
     &models.Doctor{},
@@ -43,12 +44,17 @@ func DBconnect() {
     log.Fatalf("Migration failed: %v", err)
 	}
 
-
 	DB.Create(&models.Admin{
 		Name:"Pavan",
 		Email:"chavapavankumar1234@gmail.com",
 		Password:"pavango",
+		Role:"admin",
 	})
 }
+
+
+
+
+
 
 

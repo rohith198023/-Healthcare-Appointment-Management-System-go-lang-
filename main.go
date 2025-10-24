@@ -7,22 +7,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"project/middleware"
 )
-
 func main(){
 	database.DBconnect()
     app :=fiber.New() 
 
-	// ================== AUTH ==================
+
 	app.Post("/auth/patient/signup", handlers.PatientsignUp)   
 	app.Post("/auth/patient/login", handlers.PatientLogin)
 	app.Post("/auth/verify-otp/patient", handlers.VerifyOTPPatient)
 
 
-	app.Post("/auth/doctor/signup", handlers.DoctorsignUp)     // doctor register
+	app.Post("/auth/doctor/signup", handlers.DoctorsignUp)  
 	app.Post("/auth/doctor/login", handlers.DoctorLogin)  
 	app.Post("/auth/verify-otp/doctor", handlers.VerifyOTPDoctor)
-	//admin login
 	app.Post("/auth/admin/login", handlers.AdminLogin)
+
 
 	//patient api's 
 	PatientApi := app.Group("/api/patient", middleware.VerifyToken)
@@ -42,9 +41,6 @@ func main(){
 
 	PatientApi.Get("/queue", handlers.GetMyQueueStatus)
 
-
-
-
 	
 	//Doctor api's
 	DoctorApi := app.Group("/api/doctor", middleware.VerifyToken)
@@ -56,7 +52,7 @@ func main(){
 	DoctorApi.Put("/appointments/:appointmentId/complete", handlers.CompleteAppointment)
 
 	//admin api's
-	AdminApi := app.Group("/api/admin", middleware.VerifyToken)
+	AdminApi := app.Group("/api/admin", middleware.VerifyToken,middleware.AdminOnly)
 
 	//manage patients
 	AdminApi.Get("/patients", handlers.AdminGetAllPatients)  

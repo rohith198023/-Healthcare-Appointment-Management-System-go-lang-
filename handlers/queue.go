@@ -8,7 +8,7 @@ import (
 	"project/models"
 )
 
-// Recalculate queue for a given doctor after appointment is completed/cancelled
+
 func RecalculateQueue(doctorID uint) error {
 	 queues:= []models.Queue{}
 	if err := database.DB.

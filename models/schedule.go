@@ -1,7 +1,9 @@
 package models
+
 import(
 	"time"
 )
+
 type Schedule struct{
 	ID        uint      `gorm:"primaryKey"`
 	Date      time.Time `json:"date"`

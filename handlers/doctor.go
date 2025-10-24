@@ -126,7 +126,6 @@ func VerifyOTPDoctor(c *fiber.Ctx) error{
 	user.OTP=""
 	user.OTPExpiry=time.Time{}
 	database.DB.Save(&user)
-
 	token, err:=utils.GenrateToken(user.ID,user.Role)
 	if err!=nil{
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
